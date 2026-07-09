@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export class calendar extends Component {
   render() {
     return (
-      <View>
+      <SafeAreaView>
         <Text> Calendar </Text>
-      </View>
+      </SafeAreaView>
     );
   }
 }

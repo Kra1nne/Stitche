@@ -1,12 +1,16 @@
+import { styled } from "nativewind";
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
+
+const SafeAreaView = styled(RNSafeAreaView);
 
 export class list extends Component {
   render() {
     return (
-      <View>
+      <SafeAreaView>
         <Text> List of Item </Text>
-      </View>
+      </SafeAreaView>
     );
   }
 }

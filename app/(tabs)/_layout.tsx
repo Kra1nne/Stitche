@@ -13,10 +13,8 @@ export default function RootLayout() {
   const TabIcon = ({ icon: Icon, focused }: TabIconProps) => {
     return (
       <View className="tabs-icon">
-        <View
-          className={clsx("tabs-pill", focused && "tabs-active text-white")}
-        >
-          <Icon width={15} height={15} />
+        <View className={clsx("tabs-pill", focused && "tabs-active")}>
+          <Icon width={15} height={15} fill={focused ? "#ffffff" : "#0d6efd"} />
         </View>
       </View>
     );
