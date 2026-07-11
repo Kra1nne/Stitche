@@ -69,9 +69,12 @@ CREATE TABLE IF NOT EXISTS orders (
     customer_id INTEGER NOT NULL,
 
     order_date TEXT DEFAULT CURRENT_TIMESTAMP,
+
     due_date TEXT,
 
     status TEXT DEFAULT 'Pending',
+
+    quantity INTEGER DEFAULT 1,
 
     total REAL DEFAULT 0,
 
@@ -86,28 +89,22 @@ CREATE TABLE IF NOT EXISTS orders (
 `;
 
 export const ITEM_TABLE = `
-CREATE TABLE IF NOT EXISTS order_items (
+CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-    order_id INTEGER NOT NULL,
+    item_id INTEGER NOT NULL,
 
     garment_id INTEGER NOT NULL,
 
     size_id INTEGER,
 
-    customer_measurement_id INTEGER,
-
-    quantity INTEGER DEFAULT 1,
-
     material TEXT,
 
     unit_price REAL,
 
-    subtotal REAL,
-
     remarks TEXT,
 
-    FOREIGN KEY(order_id)
+    FOREIGN KEY(item_id)
         REFERENCES orders(id)
         ON DELETE CASCADE,
 
@@ -115,9 +112,6 @@ CREATE TABLE IF NOT EXISTS order_items (
         REFERENCES garments(id),
 
     FOREIGN KEY(size_id)
-        REFERENCES sizes(id),
-
-    FOREIGN KEY(customer_measurement_id)
-        REFERENCES customer_measurements(id)
+        REFERENCES sizes(id)
 );
 `;

@@ -26,14 +26,6 @@ export function useSizes() {
     setLoading(false);
   }
 
-  async function addSize(name: string) {
-    await repository.create({
-      name,
-    });
-
-    await loadSizes();
-  }
-
   useEffect(() => {
     loadSizes();
   }, []);
@@ -43,6 +35,5 @@ export function useSizes() {
     loading,
 
     loadSizes,
-    addSize,
   };
 }

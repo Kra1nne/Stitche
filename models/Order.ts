@@ -4,9 +4,12 @@ export interface Order {
   customer_id: number;
 
   order_date?: string;
+
   due_date?: string;
 
   status?: string;
+
+  quantity?: string;
 
   total?: number;
 

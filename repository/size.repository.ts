@@ -9,18 +9,4 @@ export class SizeRepository {
       "SELECT * FROM sizes ORDER BY id DESC",
     );
   }
-
-  async create(size: Size) {
-    await this.db.runAsync(
-      `
-        INSERT INTO sizes
-        (
-            name,
-            created_at
-        )
-        VALUES (?, ?,)
-        `,
-      [size.name ?? null, size.created_at ?? null],
-    );
-  }
 }

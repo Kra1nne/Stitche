@@ -7,7 +7,7 @@ const SafeAreaView = styled(RNSafeAreaView);
 export default function Index() {
   return (
     <SafeAreaView>
-      <Text>Calendar</Text>
+      <Text>Item</Text>
     </SafeAreaView>
   );
 }
