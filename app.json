@@ -52,7 +52,8 @@
             "./assets/fonts/Manrope-SemiBold.ttf"
           ]
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true,

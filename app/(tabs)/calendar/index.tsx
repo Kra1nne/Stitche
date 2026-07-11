@@ -5,14 +5,14 @@ import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
-export class list extends Component {
+export class index extends Component {
   render() {
     return (
       <SafeAreaView>
-        <Text> List of Item </Text>
+        <Text> Calendar </Text>
       </SafeAreaView>
     );
   }
 }
 
-export default list;
+export default index;

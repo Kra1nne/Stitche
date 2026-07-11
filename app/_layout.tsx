@@ -1,5 +1,7 @@
+import { migrateDbIfNeeded } from "@/database";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
+import { SQLiteProvider } from "expo-sqlite";
 import { useEffect } from "react";
 
 export default function RootLayout() {
@@ -8,9 +10,9 @@ export default function RootLayout() {
     "manrope-extrabold": require("../assets/fonts/Manrope-ExtraBold.ttf"),
     "manrope-extralight": require("../assets/fonts/Manrope-ExtraLight.ttf"),
     "manrope-light": require("../assets/fonts/Manrope-Light.ttf"),
-    "manrope-meduim": require("../assets/fonts/Manrope-Bold.ttf"),
+    "manrope-medium": require("../assets/fonts/Manrope-Bold.ttf"),
     "manrope-regular": require("../assets/fonts/Manrope-Regular.ttf"),
-    "manrope-simebold": require("../assets/fonts/Manrope-SemiBold.ttf"),
+    "manrope-semibold": require("../assets/fonts/Manrope-SemiBold.ttf"),
   });
 
   useEffect(() => {
@@ -22,9 +24,11 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <SQLiteProvider databaseName="stitche.db" onInit={migrateDbIfNeeded}>
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </SQLiteProvider>
   );
 }
