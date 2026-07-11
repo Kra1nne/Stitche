@@ -1,17 +1,15 @@
 import { styled } from "nativewind";
-import React, { Component } from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
-export class index extends Component {
-  render() {
-    return (
-      <SafeAreaView>
-        <Text> Home </Text>
-      </SafeAreaView>
-    );
-  }
-}
 
-export default index;
+export default function Index() {
+  return (
+    <SafeAreaView className="flex-1 p-4">
+      <View>
+        <Text>Home</Text>
+      </View>
+    </SafeAreaView>
+  );
+}
