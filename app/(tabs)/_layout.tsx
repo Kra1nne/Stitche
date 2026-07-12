@@ -14,7 +14,7 @@ export default function RootLayout() {
     return (
       <View className="tabs-icon">
         <View className={clsx("tabs-pill", focused && "tabs-active")}>
-          <Icon width={15} height={15} fill={focused ? "#ffffff" : "#0d6efd"} />
+          <Icon width={15} height={15} fill={focused ? "#ffffff" : "#1e3a5f"} />
         </View>
       </View>
     );

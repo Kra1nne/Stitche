@@ -5,18 +5,41 @@
 @import "nativewind/theme";
 
 @theme {
-  --color-background: #ffffff;
-  --color-foreground: #0d6efd;
+  /* Core Colors */
+  --color-background: #faf8f5; /* Warm ivory */
+  --color-foreground: #1f2937; /* Tailor charcoal */
   --color-card: #ffffff;
-  --color-muted: #f6eecf;
-  --color-muted-foreground: rgba(0, 0, 0, 0.6);
-  --color-primary: #0d6efd;
-  --color-accent: #ea7a53;
-  --color-border: rgba(0, 0, 0, 0.1);
-  --color-success: #16a34a;
-  --color-destructive: #dc2626;
-  --color-subscription: #8fd1bd;
 
+  /* Secondary */
+  --color-muted: #efe7da; /* Linen */
+  --color-muted-foreground: #6b7280; /* Soft gray */
+
+  /* Brand */
+  --color-primary: #1e3a5f; /* Deep navy */
+  --color-primary-foreground: #ffffff;
+
+  --color-accent: #a97142; /* Leather brown */
+  --color-accent-foreground: #ffffff;
+
+  /* Borders */
+  --color-border: #d8ccbc;
+
+  /* Status */
+  --color-success: #2f855a;
+  --color-destructive: #b91c1c;
+
+  /* Special */
+  --color-subscription: #c9a227; /* Tailor's brass/gold */
+
+  /* Optional Extras */
+  --color-fabric: #d6c6af; /* Beige fabric */
+  --color-thread: #8b5e3c; /* Brown thread */
+  --color-gold: #c9a227; /* Premium accent */
+  --color-burgundy: #6d213c; /* Luxury highlight */
+  --color-navy-light: #355c7d;
+  --color-shadow: rgba(30, 58, 95, 0.08);
+
+  /* Spacing */
   --spacing-0: 0px;
   --spacing-1: 4px;
   --spacing-2: 8px;
@@ -37,6 +60,7 @@
   --spacing-24: 96px;
   --spacing-30: 120px;
 
+  /* Fonts */
   --font-manrope: manrope-regular;
   --font-manrope-light: manrope-light;
   --font-manrope-medium: manrope-medium;
@@ -75,7 +99,7 @@
     @apply size-10 rounded-full;
   }
   .card {
-    @apply rounded-3xl bg-card border border-border p-5 shadow-sm;
+    @apply rounded-3xl bg-card  p-5 shadow-sm;
   }
 
   .card-header {
@@ -96,5 +120,8 @@
 
   .card-footer {
     @apply mt-4 flex-row items-center justify-between;
+  }
+  .line {
+    @apply w-full border-b text-primary;
   }
 }
