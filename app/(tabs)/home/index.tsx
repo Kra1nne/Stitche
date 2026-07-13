@@ -11,21 +11,20 @@ const SafeAreaView = styled(RNSafeAreaView);
 
 export default function Index() {
   const item = [
-    { id: 1, name: "Blue Plain Tshirt", img: images.tshirt_01 },
-    { id: 2, name: "Purple Plain Tshirt", img: images.tshirt_02 },
-    { id: 3, name: "Black Short", img: images.short_01 },
-    { id: 4, name: "Red Hoodie", img: images.hoodie_01 },
+    { id: 1, name: "Blue Plain Tshirt", img: images.tshirt_01, price: 1000 },
+    { id: 2, name: "Purple Plain Tshirt", img: images.tshirt_02, price: 1000 },
+    { id: 3, name: "Black Short", img: images.short_01, price: 1000 },
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-4">
+    <SafeAreaView className="flex-1 bg-gray-100 p-4">
       {/* Header */}
       <View className="mb-6 flex-row items-center justify-between ">
         <Text className="font-manrope-extrabold text-3xl text-foreground">
           Dashboard
         </Text>
         <View>
-          <BellIcon width={20} height={20} />
+          <BellIcon width={15} height={15} />
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -134,8 +133,21 @@ export default function Index() {
                       style={{ width: 180, height: 180, borderRadius: 15 }}
                     />
                   </View>
-                  <View className="mt-3">
-                    <Text className="text-sm font-bold">{card.name}</Text>
+                  <View className="mt-3 flex-row items-center justify-between">
+                    <View className="flex-1 pr-3">
+                      <Text
+                        numberOfLines={2}
+                        className="text-xs font-bold text-foreground"
+                      >
+                        {card.name}
+                      </Text>
+                    </View>
+
+                    <View className="bg-primary/10 px-3 py-1 rounded-full">
+                      <Text className="text-xs font-extrabold text-primary">
+                        ₱{card.price.toLocaleString()}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               ))}

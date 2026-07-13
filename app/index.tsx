@@ -1,7 +1,7 @@
 import "@/global.css";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { styled } from "nativewind";
-import { Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
@@ -12,12 +12,13 @@ export default function App() {
       <Text className="text-xl font-manrope-bold text-blue-500">
         Welcome to Nativewind!
       </Text>
-      <Link
-        href="/(tabs)/home/"
+
+      <Pressable
+        onPress={() => router.push("/(tabs)/home")}
         className="p-4 bg-primary text-white font-manrope mt-6 rounded-4xl"
       >
-        Get Started
-      </Link>
+        <Text className="text-white">Get Started</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }

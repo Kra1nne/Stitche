@@ -11,9 +11,14 @@ const Marker = icons.marker;
 const Calendar = icons.calendar;
 const Tshirt = icons.tshirt;
 const Add = icons.add;
+const Search = icons.search;
+const QR_Scan = icons.qr_scan;
+const Filter = icons.filter;
 
 export default function Index() {
   const [search, setSearch] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+
   const order = [
     {
       id: 1,
@@ -169,20 +174,27 @@ export default function Index() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-4">
-      <View className="mb-6 flex-row justify-between items-center">
-        <Text className="text-3xl font-manrope-extrabold text-foreground">
+    <SafeAreaView className="flex-1 bg-gray-100 p-4">
+      <View className="flex-row items-center justify-between">
+        <Text className="text-3xl mb-2 font-manrope-extrabold text-foreground">
           Orders
         </Text>
+        <View className="gap-4 px-2 flex-row">
+          <QR_Scan width={15} height={15} />
+          <Filter width={15} height={15} />
+        </View>
       </View>
-      <View className="mb-4">
-        <TextInput
-          placeholder="Search orders..."
-          value={search}
-          onChangeText={setSearch}
-          className="bg-white border border-gray-300 rounded-xl px-4 py-3"
-          placeholderTextColor="#9ca3af"
-        />
+      <View className="mb-2">
+        <View className="flex-row items-center bg-white border border-gray-200 rounded-2xl px-4 h-10 shadow-sm">
+          <Search width={18} height={18} color="#9CA3AF" />
+          <TextInput
+            placeholder="Search products..."
+            placeholderTextColor="#9CA3AF"
+            className="flex-1 ml-3 text-base text-gray-900"
+            value={search}
+            onChangeText={setSearch}
+          />
+        </View>
       </View>
       <FlatList
         data={filteredOrders}
@@ -198,13 +210,16 @@ export default function Index() {
                 </View>
                 <View>
                   <Text className="card-title text-sm manrope-bold">
-                    {item.name}
+                    {item.name.split(" ").slice(0, 2).join(" ") +
+                      (item.name.split(" ").length > 2 ? "..." : "")}
                   </Text>
                   <Text className="text-xs text-success">{item.type}</Text>
                 </View>
               </View>
 
-              <View className={`p-1 ${getStatusColor(item.status)}`}>
+              <View
+                className={`py-1 px-3 rounded-full ${getStatusColor(item.status)}`}
+              >
                 <Text className="text-white text-sm manrope-light">
                   {item.status}
                 </Text>
@@ -230,7 +245,7 @@ export default function Index() {
           </View>
         )}
         ListEmptyComponent={
-          <View className="card items-center gap-4">
+          <View className=" mt-10 items-center gap-4">
             <Briefcase width={45} height={45} fill={"#1f2937"} />
             <Text className="text-gray-500 manrope-bolder text-xl">
               No orders found.
@@ -239,9 +254,7 @@ export default function Index() {
         }
       />
       <Pressable
-        onPress={() => {
-          /* navigate to create order */
-        }}
+        onPress={() => setModalVisible(true)}
         className="absolute bottom-40 bg-primary p-1 rounded-full right-6 items-center justify-center"
         style={{ elevation: 6 }} // for Android shadow
       >
