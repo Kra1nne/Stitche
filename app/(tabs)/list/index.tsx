@@ -1,4 +1,5 @@
 import { icons } from "@/constants/icon";
+import { useTheme } from "@/context/ThemeContext";
 import { styled } from "nativewind";
 import { useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
@@ -16,6 +17,9 @@ const QR_Scan = icons.qr_scan;
 const Filter = icons.filter;
 
 export default function Index() {
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
+  const iconColor = isDarkMode ? "#f9fafb" : "#1f2937";
   const [search, setSearch] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -151,6 +155,7 @@ export default function Index() {
       due: "May 8, 2026",
     },
   ];
+
   const filteredOrders = order.filter((item) => {
     const query = search.toLowerCase();
 
@@ -162,6 +167,7 @@ export default function Index() {
       item.address.toLowerCase().includes(query)
     );
   });
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Completed":
@@ -174,19 +180,19 @@ export default function Index() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100 p-4">
+    <SafeAreaView className="flex-1 bg-background p-4">
       <View className="flex-row items-center justify-between">
         <Text className="text-3xl mb-2 font-manrope-extrabold text-foreground">
           Orders
         </Text>
         <View className="gap-4 px-2 flex-row">
-          <QR_Scan width={15} height={15} />
-          <Filter width={15} height={15} />
+          <QR_Scan width={15} height={15} fill={iconColor} />
+          <Filter width={15} height={15} fill={iconColor} />
         </View>
       </View>
       <View className="mb-2">
-        <View className="flex-row items-center bg-white border border-gray-200 rounded-2xl px-4 h-10 shadow-sm">
-          <Search width={18} height={18} color="#9CA3AF" />
+        <View className="flex-row items-center  border border-gray-200 rounded-2xl px-4 h-10 shadow-sm">
+          <Search width={18} height={18} fill="#9CA3AF" />
           <TextInput
             placeholder="Search products..."
             placeholderTextColor="#9CA3AF"
@@ -206,21 +212,23 @@ export default function Index() {
             <View className="card-header">
               <View className="flex-row items-center gap-2">
                 <View>
-                  <Briefcase width={30} height={30} fill={"#1f2937"} />
+                  <Briefcase width={30} height={30} fill={iconColor} />
                 </View>
                 <View>
-                  <Text className="card-title text-sm manrope-bold">
+                  <Text className="card-title text-sm font-manrope-bold">
                     {item.name.split(" ").slice(0, 2).join(" ") +
                       (item.name.split(" ").length > 2 ? "..." : "")}
                   </Text>
-                  <Text className="text-xs text-success">{item.type}</Text>
+                  <Text className="text-xs text-success font-manrope-medium">
+                    {item.type}
+                  </Text>
                 </View>
               </View>
 
               <View
                 className={`py-1 px-3 rounded-full ${getStatusColor(item.status)}`}
               >
-                <Text className="text-white text-sm manrope-light">
+                <Text className="text-white text-sm font-manrope-medium">
                   {item.status}
                 </Text>
               </View>
@@ -229,16 +237,22 @@ export default function Index() {
               <View className="line"></View>
               <View className="mt-1">
                 <View className="flex-row items-center gap-2">
-                  <Tshirt width={10} height={10} />
-                  <Text className="text-xs manrope-medium">{item.item}</Text>
+                  <Tshirt width={10} height={10} fill={iconColor} />
+                  <Text className="text-xs font-manrope-medium text-foreground">
+                    {item.item}
+                  </Text>
                 </View>
                 <View className="flex-row items-center gap-2">
-                  <Marker width={10} height={10} />
-                  <Text className="text-xs manrope-medium">{item.address}</Text>
+                  <Marker width={10} height={10} fill={iconColor} />
+                  <Text className="text-xs font-manrope-medium text-foreground">
+                    {item.address}
+                  </Text>
                 </View>
                 <View className="flex-row items-center gap-2">
-                  <Calendar width={10} height={10} />
-                  <Text className="text-xs manrope-medium">{item.due}</Text>
+                  <Calendar width={10} height={10} fill={iconColor} />
+                  <Text className="text-xs font-manrope-medium text-foreground">
+                    {item.due}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -246,8 +260,8 @@ export default function Index() {
         )}
         ListEmptyComponent={
           <View className=" mt-10 items-center gap-4">
-            <Briefcase width={45} height={45} fill={"#1f2937"} />
-            <Text className="text-gray-500 manrope-bolder text-xl">
+            <Briefcase width={45} height={45} fill={iconColor} />
+            <Text className="text-gray-500 font-manrope-extrabold text-xl">
               No orders found.
             </Text>
           </View>
@@ -256,7 +270,7 @@ export default function Index() {
       <Pressable
         onPress={() => setModalVisible(true)}
         className="absolute bottom-40 bg-primary p-1 rounded-full right-6 items-center justify-center"
-        style={{ elevation: 6 }} // for Android shadow
+        style={{ elevation: 6 }}
       >
         <Add width={26} height={26} fill={"#fff"} />
       </Pressable>

@@ -1,4 +1,6 @@
+import { ThemeProvider } from "@/context/ThemeContext";
 import { migrateDbIfNeeded } from "@/database";
+import "@/global.css";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";
@@ -24,11 +26,13 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <SQLiteProvider databaseName="stitche.db" onInit={migrateDbIfNeeded}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-    </SQLiteProvider>
+    <ThemeProvider>
+      <SQLiteProvider databaseName="stitche.db" onInit={migrateDbIfNeeded}>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </SQLiteProvider>
+    </ThemeProvider>
   );
 }

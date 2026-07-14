@@ -4,9 +4,11 @@
 
 @import "nativewind/theme";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Core Colors */
-  --color-background: #faf8f5; /* Warm ivory */
+  --color-background: #f3f4f6; /* Warm ivory */
   --color-foreground: #1f2937; /* Tailor charcoal */
   --color-card: #ffffff;
 
@@ -68,6 +70,27 @@
   --font-manrope-bold: manrope-bold;
   --font-manrope-extrabold: manrope-extrabold;
   --font-manrope-extralight: manrope-extralight;
+}
+
+.dark {
+  --color-background: #111827;
+  --color-foreground: #f9fafb;
+  --color-card: #1f2937;
+  --color-muted: #374151;
+  --color-muted-foreground: #d1d5db;
+  --color-primary: #8bb8ff;
+  --color-primary-foreground: #111827;
+  --color-accent: #fbbf24;
+  --color-border: #4b5563;
+  --color-success: #34d399;
+  --color-destructive: #f87171;
+  --color-subscription: #fbbf24;
+  --color-fabric: #4b5563;
+  --color-thread: #d1d5db;
+  --color-gold: #fbbf24;
+  --color-burgundy: #fda4af;
+  --color-navy-light: #93c5fd;
+  --color-shadow: rgba(255, 255, 255, 0.08);
 }
 
 @layer components {

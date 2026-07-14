@@ -1,5 +1,6 @@
 import { icons } from "@/constants/icon";
 import { images } from "@/constants/image";
+import { useTheme } from "@/context/ThemeContext";
 import { Image } from "expo-image";
 import { styled } from "nativewind";
 import { useState } from "react";
@@ -11,6 +12,7 @@ const Search = icons.search;
 const Add = icons.add;
 const Tshirt = icons.tshirt;
 const Filter = icons.filter;
+
 const item = [
   {
     id: 1,
@@ -36,35 +38,44 @@ const item = [
 ];
 
 export default function Index() {
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
+  const iconColor = isDarkMode ? "#f9fafb" : "#1f2937";
   const [modalVisible, setModalVisible] = useState(false);
   const [search, setSearch] = useState("");
-  const filtereditem = item.filter((item) => {
-    const query = search.toLowerCase();
 
+  const filteredItems = item.filter((item) => {
+    const query = search.toLowerCase();
     return item.name.toLowerCase().includes(query);
   });
+
   return (
-    <SafeAreaView className="flex-1 bg-gray-100 p-4">
+    <SafeAreaView className="flex-1 p-4 bg-background ">
       <View className="flex-row items-center justify-between">
         <Text className="text-3xl mb-2 font-manrope-extrabold text-foreground">
           Products
         </Text>
         <View className="px-2">
-          <Filter width={15} height={15} />
+          <Filter width={15} height={15} fill={iconColor} />
         </View>
       </View>
-      <View className="flex-row items-center bg-white border border-gray-200 rounded-2xl px-4 h-10 shadow-sm">
-        <Search width={18} height={18} color="#9CA3AF" />
-        <TextInput
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search products..."
-          placeholderTextColor="#9CA3AF"
-          className="flex-1 ml-3 text-base text-gray-900"
-        />
+
+      {/* Wrapped in mb-2 to match the spacing rhythm used on the Orders screen */}
+      <View className="mb-2">
+        <View className="flex-row items-center border border-gray-200 rounded-2xl px-4 h-10 shadow-sm">
+          <Search width={18} height={18} fill={iconColor} />
+          <TextInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Search products..."
+            placeholderTextColor="#9CA3AF"
+            className="flex-1 ml-3 text-base text-gray-900"
+          />
+        </View>
       </View>
+
       <FlatList
-        data={filtereditem}
+        data={filteredItems}
         keyExtractor={(item) => item.id.toString()}
         contentContainerClassName="pb-14"
         showsVerticalScrollIndicator={false}
@@ -75,8 +86,8 @@ export default function Index() {
                 source={item.img}
                 style={{ width: 270, height: 270, borderRadius: 15 }}
               />
-              <View className="absolute top-0 right-0 bg-primary px-3 py-1 rounded-full">
-                <Text className="text-white text-xs font-bold">
+              <View className="absolute top-1 right-2 bg-primary px-3 py-1 rounded-full">
+                <Text className="text-white text-xs font-manrope-bold">
                   {item.garment}
                 </Text>
               </View>
@@ -85,14 +96,14 @@ export default function Index() {
               <View className="flex-1 pr-3">
                 <Text
                   numberOfLines={2}
-                  className="text-base font-bold text-foreground"
+                  className="text-base font-manrope-bold text-foreground"
                 >
                   {item.name}
                 </Text>
               </View>
 
               <View className="bg-primary/10 px-3 py-1 rounded-full">
-                <Text className="text-base font-extrabold text-primary">
+                <Text className="text-base font-manrope-extrabold text-primary">
                   ₱{item.price.toLocaleString()}
                 </Text>
               </View>
@@ -100,14 +111,15 @@ export default function Index() {
           </View>
         )}
         ListEmptyComponent={
-          <View className=" mt-10 items-center gap-4">
-            <Tshirt width={45} height={45} fill={"#1f2937"} />
-            <Text className="text-gray-500 manrope-bolder text-xl">
-              No Product found.
+          <View className="mt-10 items-center gap-4">
+            <Tshirt width={45} height={45} fill={iconColor} />
+            <Text className="text-gray-500 font-manrope-bold text-xl">
+              No product found.
             </Text>
           </View>
         }
       />
+
       <Pressable
         onPress={() => setModalVisible(true)}
         className="absolute bottom-40 bg-primary p-1 rounded-full right-6 items-center justify-center"

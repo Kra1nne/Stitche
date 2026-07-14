@@ -1,5 +1,6 @@
 import { icons } from "@/constants/icon";
 import { images } from "@/constants/image";
+import { useTheme } from "@/context/ThemeContext";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { styled } from "nativewind";
@@ -10,6 +11,9 @@ const BellIcon = icons.bell;
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function Index() {
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
+  const iconColor = isDarkMode ? "#f9fafb" : "#1f2937";
   const item = [
     { id: 1, name: "Blue Plain Tshirt", img: images.tshirt_01, price: 1000 },
     { id: 2, name: "Purple Plain Tshirt", img: images.tshirt_02, price: 1000 },
@@ -17,14 +21,14 @@ export default function Index() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100 p-4">
+    <SafeAreaView className="flex-1 bg-background p-4">
       {/* Header */}
-      <View className="mb-6 flex-row items-center justify-between ">
+      <View className="mb-2 flex-row items-center justify-between ">
         <Text className="font-manrope-extrabold text-3xl text-foreground">
           Dashboard
         </Text>
-        <View>
-          <BellIcon width={15} height={15} />
+        <View className="px-2">
+          <BellIcon width={15} height={15} fill={iconColor} />
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -41,13 +45,15 @@ export default function Index() {
 
             <View className="mt-4 flex-row items-center justify-between">
               <View>
-                <Text className="text-primary text-xs">This Month</Text>
+                <Text className="text-primary text-xs font-manrope-medium">
+                  This Month
+                </Text>
                 <Text className="text-primary font-manrope-bold">
                   July 2026
                 </Text>
               </View>
 
-              <View className="rounded-full bg-white/20 px-3 py-1">
+              <View className="rounded-full px-3 py-1">
                 <Text className="text-success font-manrope-bold">↑ 18.5%</Text>
               </View>
             </View>
@@ -113,10 +119,16 @@ export default function Index() {
         </View>
         <View className="mt-4">
           <View className="flex-row justify-between items-center">
-            <Text className="monrope-bold text-xl">Products</Text>
-            <Link href="../item/">
-              <Text className="manrope text-sm">See more</Text>
-            </Link>
+            <Text className="font-manrope-bold text-xl text-foreground">
+              Products
+            </Text>
+            <View className="px-3 py-1 border border-foreground rounded-full">
+              <Link href="../item/">
+                <Text className="font-manrope-medium text-sm text-foreground">
+                  View all
+                </Text>
+              </Link>
+            </View>
           </View>
 
           <View className="mb-16">
@@ -137,14 +149,14 @@ export default function Index() {
                     <View className="flex-1 pr-3">
                       <Text
                         numberOfLines={2}
-                        className="text-xs font-bold text-foreground"
+                        className="text-xs font-manrope-bold text-foreground"
                       >
                         {card.name}
                       </Text>
                     </View>
 
                     <View className="bg-primary/10 px-3 py-1 rounded-full">
-                      <Text className="text-xs font-extrabold text-primary">
+                      <Text className="text-xs font-manrope-extrabold text-primary">
                         ₱{card.price.toLocaleString()}
                       </Text>
                     </View>
@@ -152,9 +164,6 @@ export default function Index() {
                 </View>
               ))}
             </ScrollView>
-            {/* <View className="card m-2">
-            <Text>No Item</Text>
-          </View> */}
           </View>
         </View>
       </ScrollView>

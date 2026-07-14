@@ -2,6 +2,7 @@ import { tabs } from "@/constants/data";
 import { colors, components } from "@/constants/themes";
 import clsx from "clsx";
 import { Tabs } from "expo-router";
+import { useColorScheme } from "nativewind";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -9,12 +10,18 @@ const tabBar = components.tabBar;
 
 export default function RootLayout() {
   const insets = useSafeAreaInsets();
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === "dark";
 
   const TabIcon = ({ icon: Icon, focused }: TabIconProps) => {
     return (
       <View className="tabs-icon">
         <View className={clsx("tabs-pill", focused && "tabs-active")}>
-          <Icon width={15} height={15} fill={focused ? "#ffffff" : "#1e3a5f"} />
+          <Icon
+            width={15}
+            height={15}
+            fill={focused ? "#ffffff" : isDark ? "#f9fafb" : "#1e3a5f"}
+          />
         </View>
       </View>
     );
@@ -29,7 +36,7 @@ export default function RootLayout() {
           bottom: Math.max(insets.bottom, tabBar.horizontalInset),
           height: tabBar.height,
           borderRadius: tabBar.radius,
-          backgroundColor: colors.background,
+          backgroundColor: isDark ? "#111827" : colors.background,
           borderTopWidth: 0,
           elevation: 0,
         },
