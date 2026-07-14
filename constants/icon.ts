@@ -8,6 +8,8 @@ import briefcase from "../assets/icons/briefcase.svg";
 import sun from "../assets/icons/brightness.svg";
 import burger from "../assets/icons/burger-menu.svg";
 import calendar from "../assets/icons/calendar-days.svg";
+import camera from "../assets/icons/camera.svg";
+import close from "../assets/icons/circle-xmark.svg";
 import document from "../assets/icons/document.svg";
 import filter from "../assets/icons/filter-list.svg";
 import home from "../assets/icons/home.svg";
@@ -15,6 +17,7 @@ import info from "../assets/icons/info.svg";
 import question from "../assets/icons/interrogation.svg";
 import list from "../assets/icons/list.svg";
 import marker from "../assets/icons/marker.svg";
+import minus from "../assets/icons/minus-small.svg";
 import moon from "../assets/icons/moon.svg";
 import add from "../assets/icons/plus-small.svg";
 import qr_scan from "../assets/icons/qr-scan.svg";
@@ -27,6 +30,9 @@ import logout from "../assets/icons/user-logout.svg";
 import user from "../assets/icons/user.svg";
 
 export const icons = {
+  camera,
+  close,
+  minus,
   chevronRight,
   trend,
   clock,
