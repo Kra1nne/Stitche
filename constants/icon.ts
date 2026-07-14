@@ -1,5 +1,9 @@
+import clock from "../assets/icons/alarm-clock.svg";
+import chevronRight from "../assets/icons/angle-small-right.svg";
 import app from "../assets/icons/apps.svg";
+import trend from "../assets/icons/arrow-trend-up.svg";
 import bell from "../assets/icons/bell.svg";
+import packageIcon from "../assets/icons/box-open.svg";
 import briefcase from "../assets/icons/briefcase.svg";
 import sun from "../assets/icons/brightness.svg";
 import burger from "../assets/icons/burger-menu.svg";
@@ -23,6 +27,10 @@ import logout from "../assets/icons/user-logout.svg";
 import user from "../assets/icons/user.svg";
 
 export const icons = {
+  chevronRight,
+  trend,
+  clock,
+  packageIcon,
   logout,
   cloud,
   user,

@@ -20,6 +20,7 @@ export default function Index() {
   const { theme } = useTheme();
   const isDarkMode = theme === "dark";
   const iconColor = isDarkMode ? "#f9fafb" : "#1f2937";
+  const mutedIconColor = isDarkMode ? "#9CA3AF" : "#9CA3AF";
   const [search, setSearch] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -168,111 +169,201 @@ export default function Index() {
     );
   });
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyles = (status: string) => {
     switch (status) {
       case "Completed":
-        return "bg-success";
+        return {
+          badge: "bg-success/10",
+          dot: "bg-success",
+          text: "text-success",
+        };
       case "Pending":
-        return "bg-accent";
+        return {
+          badge: "bg-accent/10",
+          dot: "bg-accent",
+          text: "text-accent",
+        };
       default:
-        return "bg-primary";
+        return {
+          badge: "bg-primary/10",
+          dot: "bg-primary",
+          text: "text-primary",
+        };
     }
   };
 
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .slice(0, 2)
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+
   return (
-    <SafeAreaView className="flex-1 bg-background p-4">
-      <View className="flex-row items-center justify-between">
-        <Text className="text-3xl mb-2 font-manrope-extrabold text-foreground">
-          Orders
-        </Text>
-        <View className="gap-4 px-2 flex-row">
-          <QR_Scan width={15} height={15} fill={iconColor} />
-          <Filter width={15} height={15} fill={iconColor} />
+    <SafeAreaView className="flex-1 bg-background">
+      <View className="flex-1 px-5 pt-2">
+        {/* Header */}
+        <View className="flex-row items-center justify-between mb-5">
+          <View>
+            <Text className="text-3xl font-manrope-extrabold text-foreground">
+              Orders
+            </Text>
+            <Text className="text-sm font-manrope-medium text-gray-400 mt-0.5">
+              {filteredOrders.length} order
+              {filteredOrders.length === 1 ? "" : "s"}
+            </Text>
+          </View>
+          <View className="flex-row items-center gap-2">
+            <Pressable className="w-10 h-10 rounded-full bg-foreground/5 items-center justify-center">
+              <QR_Scan width={17} height={17} fill={iconColor} />
+            </Pressable>
+            <Pressable className="w-10 h-10 rounded-full bg-foreground/5 items-center justify-center">
+              <Filter width={17} height={17} fill={iconColor} />
+            </Pressable>
+          </View>
         </View>
-      </View>
-      <View className="mb-2">
-        <View className="flex-row items-center  border border-gray-200 rounded-2xl px-4 h-10 shadow-sm">
-          <Search width={18} height={18} fill="#9CA3AF" />
+
+        {/* Search */}
+        <View className="flex-row items-center bg-foreground/5 rounded-2xl px-4 h-12 mb-5">
+          <Search width={18} height={18} fill={mutedIconColor} />
           <TextInput
-            placeholder="Search products..."
+            placeholder="Search orders, items, status..."
             placeholderTextColor="#9CA3AF"
-            className="flex-1 ml-3 text-base text-gray-900"
+            className="flex-1 ml-3 h-full text-base text-foreground"
+            textAlignVertical="center"
+            style={{
+              paddingVertical: 0,
+              includeFontPadding: false,
+            }}
             value={search}
             onChangeText={setSearch}
           />
+          {search.length > 0 && (
+            <Pressable onPress={() => setSearch("")} hitSlop={8}>
+              <Text className="text-gray-400 text-lg leading-none">×</Text>
+            </Pressable>
+          )}
         </View>
-      </View>
-      <FlatList
-        data={filteredOrders}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-16 gap-2"
-        renderItem={({ item }) => (
-          <View className="card">
-            <View className="card-header">
-              <View className="flex-row items-center gap-2">
-                <View>
-                  <Briefcase width={30} height={30} fill={iconColor} />
-                </View>
-                <View>
-                  <Text className="card-title text-sm font-manrope-bold">
-                    {item.name.split(" ").slice(0, 2).join(" ") +
-                      (item.name.split(" ").length > 2 ? "..." : "")}
-                  </Text>
-                  <Text className="text-xs text-success font-manrope-medium">
-                    {item.type}
-                  </Text>
-                </View>
-              </View>
 
-              <View
-                className={`py-1 px-3 rounded-full ${getStatusColor(item.status)}`}
+        {/* List */}
+        <FlatList
+          data={filteredOrders}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="pb-24 gap-3"
+          renderItem={({ item }) => {
+            const status = getStatusStyles(item.status);
+            return (
+              <Pressable
+                className="bg-foreground/[0.03] rounded-3xl p-4 border border-foreground/5"
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: isDarkMode ? 0 : 0.04,
+                  shadowRadius: 8,
+                }}
               >
-                <Text className="text-white text-sm font-manrope-medium">
-                  {item.status}
-                </Text>
+                {/* Top row: avatar, name/type, status */}
+                <View className="flex-row items-center justify-between mb-3">
+                  <View className="flex-row items-center gap-3 flex-1 pr-2">
+                    <View className="w-11 h-11 rounded-full bg-primary/10 items-center justify-center">
+                      <Text className="text-primary font-manrope-bold text-sm">
+                        {getInitials(item.name)}
+                      </Text>
+                    </View>
+                    <View className="flex-1">
+                      <Text
+                        className="text-[15px] font-manrope-bold text-foreground"
+                        numberOfLines={1}
+                      >
+                        {item.name}
+                      </Text>
+                      <Text className="text-xs font-manrope-medium text-gray-400 mt-0.5">
+                        {item.type} · {item.item}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View
+                    className={`flex-row items-center gap-1.5 py-1 px-2.5 rounded-full ${status.badge}`}
+                  >
+                    <View
+                      className={`w-1.5 h-1.5 rounded-full ${status.dot}`}
+                    />
+                    <Text
+                      className={`text-xs font-manrope-semibold ${status.text}`}
+                    >
+                      {item.status}
+                    </Text>
+                  </View>
+                </View>
+
+                <View className="h-px bg-foreground/5 mb-3" />
+
+                {/* Details */}
+                <View className="gap-1.5">
+                  <View className="flex-row items-center gap-2">
+                    <Marker width={12} height={12} fill={mutedIconColor} />
+                    <Text
+                      className="text-xs font-manrope-medium text-gray-400 flex-1"
+                      numberOfLines={1}
+                    >
+                      {item.address}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center gap-2">
+                    <Calendar width={12} height={12} fill={mutedIconColor} />
+                    <Text className="text-xs font-manrope-medium text-gray-400">
+                      Due {item.due}
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Footer: qty + total, pulled out as key numbers */}
+                <View className="flex-row items-center justify-between mt-3 pt-3 border-t border-foreground/5">
+                  <View className="flex-row items-center gap-1.5">
+                    <Tshirt width={12} height={12} fill={iconColor} />
+                    <Text className="text-xs font-manrope-medium text-foreground">
+                      {item.count}× {item.size}
+                    </Text>
+                  </View>
+                  <Text className="text-sm font-manrope-extrabold text-foreground">
+                    ₱{item.total.toLocaleString()}
+                  </Text>
+                </View>
+              </Pressable>
+            );
+          }}
+          ListEmptyComponent={
+            <View className="mt-16 items-center gap-3">
+              <View className="w-16 h-16 rounded-full bg-foreground/5 items-center justify-center">
+                <Briefcase width={28} height={28} fill={iconColor} />
               </View>
+              <Text className="text-gray-400 font-manrope-bold text-base">
+                No orders found
+              </Text>
+              <Text className="text-gray-400 font-manrope-medium text-xs">
+                Try a different search term
+              </Text>
             </View>
-            <View>
-              <View className="line"></View>
-              <View className="mt-1">
-                <View className="flex-row items-center gap-2">
-                  <Tshirt width={10} height={10} fill={iconColor} />
-                  <Text className="text-xs font-manrope-medium text-foreground">
-                    {item.item}
-                  </Text>
-                </View>
-                <View className="flex-row items-center gap-2">
-                  <Marker width={10} height={10} fill={iconColor} />
-                  <Text className="text-xs font-manrope-medium text-foreground">
-                    {item.address}
-                  </Text>
-                </View>
-                <View className="flex-row items-center gap-2">
-                  <Calendar width={10} height={10} fill={iconColor} />
-                  <Text className="text-xs font-manrope-medium text-foreground">
-                    {item.due}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        )}
-        ListEmptyComponent={
-          <View className=" mt-10 items-center gap-4">
-            <Briefcase width={45} height={45} fill={iconColor} />
-            <Text className="text-gray-500 font-manrope-extrabold text-xl">
-              No orders found.
-            </Text>
-          </View>
-        }
-      />
+          }
+        />
+      </View>
+
+      {/* FAB */}
       <Pressable
         onPress={() => setModalVisible(true)}
-        className="absolute bottom-40 bg-primary p-1 rounded-full right-6 items-center justify-center"
-        style={{ elevation: 6 }}
+        className="absolute bottom-40 right-6 w-14 h-14 rounded-full bg-primary items-center justify-center"
+        style={{
+          elevation: 6,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.2,
+          shadowRadius: 8,
+        }}
       >
-        <Add width={26} height={26} fill={"#fff"} />
+        <Add width={24} height={24} fill={"#fff"} />
       </Pressable>
     </SafeAreaView>
   );

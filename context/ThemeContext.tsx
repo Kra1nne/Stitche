@@ -1,62 +1,74 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import { useColorScheme } from "nativewind";
 import {
-    createContext,
-    ReactNode,
-    useContext,
-    useEffect,
-    useState,
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
-import { View } from "react-native";
+import { Appearance, useColorScheme, View } from "react-native";
 
 type Theme = "light" | "dark";
 
-const ThemeContext = createContext({
-  theme: "light" as Theme,
+type ThemeContextType = {
+  theme: Theme;
+  toggleTheme: () => void;
+};
+
+const ThemeContext = createContext<ThemeContextType>({
+  theme: "light",
   toggleTheme: () => {},
 });
 
 const STORAGE_KEY = "theme";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const { colorScheme, setColorScheme } = useColorScheme();
+  const systemTheme = useColorScheme();
+
+  const [theme, setTheme] = useState<Theme>(
+    systemTheme === "dark" ? "dark" : "light",
+  );
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then((saved) => {
-        if (saved === "dark" || saved === "light") {
-          setColorScheme(saved);
-        }
-      })
-      .catch((err) => {
-        console.warn("Failed to load saved theme:", err);
-      })
-      .finally(() => {
-        setReady(true);
-      });
-  }, [setColorScheme]);
+    async function loadTheme() {
+      try {
+        const saved = await AsyncStorage.getItem(STORAGE_KEY);
 
-  const toggleTheme = () => {
-    const next: Theme = colorScheme === "dark" ? "light" : "dark";
-    setColorScheme(next);
-    AsyncStorage.setItem(STORAGE_KEY, next).catch((err) => {
-      console.warn("Failed to save theme:", err);
-    });
+        if (saved === "light" || saved === "dark") {
+          setTheme(saved);
+          Appearance.setColorScheme(saved);
+        }
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setReady(true);
+      }
+    }
+
+    loadTheme();
+  }, []);
+
+  const toggleTheme = async () => {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+
+    setTheme(next);
+    Appearance.setColorScheme(next);
+
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, next);
+    } catch (e) {
+      console.warn(e);
+    }
   };
 
   if (!ready) return null;
 
-  const resolvedTheme: Theme = colorScheme === "dark" ? "dark" : "light";
-
   return (
-    <ThemeContext.Provider value={{ theme: resolvedTheme, toggleTheme }}>
-      <View
-        className={resolvedTheme === "dark" ? "dark" : ""}
-        style={{ flex: 1 }}
-      >
-        <StatusBar style={resolvedTheme === "dark" ? "light" : "dark"} />
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <View className={theme === "dark" ? "dark flex-1" : "flex-1"}>
+        <StatusBar style={theme === "dark" ? "light" : "dark"} />
         {children}
       </View>
     </ThemeContext.Provider>

@@ -41,91 +41,124 @@ export default function Index() {
   const { theme } = useTheme();
   const isDarkMode = theme === "dark";
   const iconColor = isDarkMode ? "#f9fafb" : "#1f2937";
+  const mutedIconColor = "#9CA3AF";
   const [modalVisible, setModalVisible] = useState(false);
   const [search, setSearch] = useState("");
 
   const filteredItems = item.filter((item) => {
     const query = search.toLowerCase();
-    return item.name.toLowerCase().includes(query);
+    return (
+      item.name.toLowerCase().includes(query) ||
+      item.garment.toLowerCase().includes(query)
+    );
   });
 
   return (
-    <SafeAreaView className="flex-1 p-4 bg-background ">
-      <View className="flex-row items-center justify-between">
-        <Text className="text-3xl mb-2 font-manrope-extrabold text-foreground">
-          Products
-        </Text>
-        <View className="px-2">
-          <Filter width={15} height={15} fill={iconColor} />
+    <SafeAreaView className="flex-1 bg-background">
+      <View className="flex-1 px-5 pt-2">
+        {/* Header */}
+        <View className="flex-row items-center justify-between mb-5">
+          <View>
+            <Text className="text-3xl font-manrope-extrabold text-foreground">
+              Products
+            </Text>
+            <Text className="text-sm font-manrope-medium text-gray-400 mt-0.5">
+              {filteredItems.length} item{filteredItems.length === 1 ? "" : "s"}
+            </Text>
+          </View>
+          <Pressable className="w-10 h-10 rounded-full bg-foreground/5 items-center justify-center">
+            <Filter width={17} height={17} fill={iconColor} />
+          </Pressable>
         </View>
-      </View>
 
-      {/* Wrapped in mb-2 to match the spacing rhythm used on the Orders screen */}
-      <View className="mb-2">
-        <View className="flex-row items-center border border-gray-200 rounded-2xl px-4 h-10 shadow-sm">
-          <Search width={18} height={18} fill={iconColor} />
+        {/* Search */}
+        <View className="flex-row items-center bg-foreground/5 rounded-2xl px-4 h-12 mb-5">
+          <Search width={18} height={18} fill={mutedIconColor} />
           <TextInput
-            value={search}
-            onChangeText={setSearch}
             placeholder="Search products..."
             placeholderTextColor="#9CA3AF"
-            className="flex-1 ml-3 text-base text-gray-900"
+            className="flex-1 ml-3 h-full text-base text-foreground"
+            textAlignVertical="center"
+            style={{
+              paddingVertical: 0,
+              includeFontPadding: false,
+            }}
+            value={search}
+            onChangeText={setSearch}
           />
+          {search.length > 0 && (
+            <Pressable onPress={() => setSearch("")} hitSlop={8}>
+              <Text className="text-gray-400 text-lg leading-none">×</Text>
+            </Pressable>
+          )}
         </View>
-      </View>
 
-      <FlatList
-        data={filteredItems}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerClassName="pb-14"
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <View key={item.id} className="card m-2">
-            <View className="card-content relative">
-              <Image
-                source={item.img}
-                style={{ width: 270, height: 270, borderRadius: 15 }}
-              />
-              <View className="absolute top-1 right-2 bg-primary px-3 py-1 rounded-full">
-                <Text className="text-white text-xs font-manrope-bold">
-                  {item.garment}
-                </Text>
-              </View>
-            </View>
-            <View className="mt-3 flex-row items-center justify-between">
-              <View className="flex-1 pr-3">
+        <FlatList
+          data={filteredItems}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+          }}
+          contentContainerClassName="pb-24"
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <View className="w-[48%] mb-4">
+              <View className="bg-foreground/[0.03] rounded-3xl border border-foreground/5 p-3">
+                <View className="relative">
+                  <Image
+                    source={item.img}
+                    style={{ width: "100%", aspectRatio: 1, borderRadius: 16 }}
+                  />
+                </View>
+
                 <Text
                   numberOfLines={2}
-                  className="text-base font-manrope-bold text-foreground"
+                  className="mt-3 text-xs font-manrope-bold text-foreground"
                 >
                   {item.name}
                 </Text>
-              </View>
-
-              <View className="bg-primary/10 px-3 py-1 rounded-full">
-                <Text className="text-base font-manrope-extrabold text-primary">
-                  ₱{item.price.toLocaleString()}
+                <Text className="mt-0.5 text-[11px] font-manrope-medium text-gray-400">
+                  {item.garment}
                 </Text>
+
+                <View className="mt-2 self-start bg-primary/10 px-2.5 py-1 rounded-full">
+                  <Text className="text-xs font-manrope-extrabold text-primary">
+                    ₱{item.price.toLocaleString()}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        )}
-        ListEmptyComponent={
-          <View className="mt-10 items-center gap-4">
-            <Tshirt width={45} height={45} fill={iconColor} />
-            <Text className="text-gray-500 font-manrope-bold text-xl">
-              No product found.
-            </Text>
-          </View>
-        }
-      />
+          )}
+          ListEmptyComponent={
+            <View className="mt-16 items-center gap-3">
+              <View className="w-16 h-16 rounded-full bg-foreground/5 items-center justify-center">
+                <Tshirt width={28} height={28} fill={iconColor} />
+              </View>
+              <Text className="text-gray-400 font-manrope-bold text-base">
+                No products found
+              </Text>
+              <Text className="text-gray-400 font-manrope-medium text-xs">
+                Try a different search term
+              </Text>
+            </View>
+          }
+        />
+      </View>
 
+      {/* FAB */}
       <Pressable
         onPress={() => setModalVisible(true)}
-        className="absolute bottom-40 bg-primary p-1 rounded-full right-6 items-center justify-center"
-        style={{ elevation: 6 }}
+        className="absolute bottom-40 right-6 w-14 h-14 rounded-full bg-primary items-center justify-center"
+        style={{
+          elevation: 6,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.2,
+          shadowRadius: 8,
+        }}
       >
-        <Add width={26} height={26} fill={"#fff"} />
+        <Add width={24} height={24} fill={"#fff"} />
       </Pressable>
     </SafeAreaView>
   );
