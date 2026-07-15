@@ -1,9 +1,9 @@
-import EmptyState from "@/components/Emptystate";
+import EmptyState from "@/components/EmptyState";
 import FAB from "@/components/FAB";
 import Screen from "@/components/Screen";
 import ScreenHeader from "@/components/ScreenHeader";
-import SearchBar from "@/components/Searchbar";
-import StatusBadge from "@/components/Statusbadge";
+import SearchBar from "@/components/SearchBar";
+import StatusBadge from "@/components/StatusBadge";
 import { icons } from "@/constants/icon";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useState } from "react";

@@ -1,6 +1,6 @@
 import { icons } from "@/constants/icon";
 import { useTheme } from "@/context/ThemeContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Keyboard,
   Modal,
@@ -15,8 +15,6 @@ import {
 
 const Close = icons.close;
 const Camera = icons.camera;
-const Minus = icons.minus;
-const Plus = icons.add;
 
 const GARMENTS = [
   "T-Shirt",
@@ -28,7 +26,7 @@ const GARMENTS = [
 ];
 const SIZES = ["S", "M", "L", "XL", "XXL", "Customize"];
 
-export type NewProduct = {
+export type ProductFormValues = {
   name: string;
   garment: string;
   size: string;
@@ -36,38 +34,71 @@ export type NewProduct = {
   quantity: number;
 };
 
-export default function AddProductModal({
+const EMPTY_VALUES: ProductFormValues = {
+  name: "",
+  garment: "",
+  size: "",
+  price: "",
+  quantity: 1,
+};
+
+export default function ProductModal({
   visible,
+  mode = "add",
+  initialValues,
   onClose,
   onSubmit,
 }: {
   visible: boolean;
+  /** "add" shows an empty form; "edit" pre-fills from initialValues */
+  mode?: "add" | "edit";
+  /** Pass the product's current values when mode="edit" */
+  initialValues?: Partial<ProductFormValues>;
   onClose: () => void;
-  onSubmit: (product: NewProduct) => void;
+  onSubmit: (values: ProductFormValues) => void;
 }) {
   const { theme } = useTheme();
   const isDarkMode = theme === "dark";
   const iconColor = isDarkMode ? "#f9fafb" : "#1f2937";
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState(EMPTY_VALUES.name);
   const [garment, setGarment] = useState<string | null>(null);
   const [size, setSize] = useState<string | null>(null);
-  const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState(EMPTY_VALUES.price);
+  const [quantity, setQuantity] = useState(EMPTY_VALUES.quantity);
+
+  // Populate the form whenever the modal opens, using initialValues in edit mode
+  useEffect(() => {
+    if (!visible) return;
+
+    if (mode === "edit" && initialValues) {
+      setName(initialValues.name ?? "");
+      setGarment(initialValues.garment ?? null);
+      setSize(initialValues.size ?? null);
+      setPrice(initialValues.price ?? "");
+      setQuantity(initialValues.quantity ?? 1);
+    } else {
+      setName(EMPTY_VALUES.name);
+      setGarment(null);
+      setSize(null);
+      setPrice(EMPTY_VALUES.price);
+      setQuantity(EMPTY_VALUES.quantity);
+    }
+  }, [visible, mode, initialValues]);
 
   const isValid =
     name.trim().length > 0 && garment && size && price.trim().length > 0;
 
   const reset = () => {
-    setName("");
+    setName(EMPTY_VALUES.name);
     setGarment(null);
     setSize(null);
-    setPrice("");
-    setQuantity(1);
+    setPrice(EMPTY_VALUES.price);
+    setQuantity(EMPTY_VALUES.quantity);
   };
 
   const handleClose = () => {
-    reset();
+    if (mode === "add") reset();
     onClose();
   };
 
@@ -80,9 +111,12 @@ export default function AddProductModal({
       price: price.trim(),
       quantity,
     });
-    reset();
+    if (mode === "add") reset();
     onClose();
   };
+
+  const title = mode === "edit" ? "Edit Product" : "Add Product";
+  const submitLabel = mode === "edit" ? "Save Changes" : "Add Product";
 
   return (
     <Modal
@@ -112,7 +146,7 @@ export default function AddProductModal({
               {/* Header */}
               <View className="flex-row items-center justify-between mb-5">
                 <Text className="text-xl font-manrope-extrabold text-foreground">
-                  Add Product
+                  {title}
                 </Text>
                 <Pressable
                   onPress={handleClose}
@@ -176,7 +210,7 @@ export default function AddProductModal({
                   })}
                 </View>
 
-                {/*                 
+                {/* Size — re-enabled: isValid depends on it being set */}
                 <Text className="text-xs font-manrope-bold text-gray-400 uppercase mb-2">
                   Size
                 </Text>
@@ -203,9 +237,9 @@ export default function AddProductModal({
                       </Pressable>
                     );
                   })}
-                </View> */}
+                </View>
 
-                {/* Price + Quantity */}
+                {/* Price */}
                 <View className="flex-row gap-3 mb-6">
                   <View className="flex-1">
                     <Text className="text-xs font-manrope-bold text-gray-400 uppercase mb-2">
@@ -225,29 +259,6 @@ export default function AddProductModal({
                       />
                     </View>
                   </View>
-                  {/* 
-                  <View>
-                    <Text className="text-xs font-manrope-bold text-gray-400 uppercase mb-2">
-                      Quantity
-                    </Text>
-                    <View className="flex-row items-center bg-foreground/5 rounded-2xl h-12 px-1.5">
-                      <Pressable
-                        onPress={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="w-9 h-9 rounded-xl items-center justify-center active:bg-foreground/10"
-                      >
-                        <Minus width={14} height={14} fill={iconColor} />
-                      </Pressable>
-                      <Text className="w-8 text-center text-base font-manrope-bold text-foreground">
-                        {quantity}
-                      </Text>
-                      <Pressable
-                        onPress={() => setQuantity((q) => q + 1)}
-                        className="w-9 h-9 rounded-xl items-center justify-center active:bg-foreground/10"
-                      >
-                        <Plus width={14} height={14} fill={iconColor} />
-                      </Pressable>
-                    </View>
-                  </View> */}
                 </View>
               </ScrollView>
 
@@ -264,7 +275,7 @@ export default function AddProductModal({
                     isValid ? "text-white" : "text-gray-400"
                   }`}
                 >
-                  Add Product
+                  {submitLabel}
                 </Text>
               </Pressable>
             </View>

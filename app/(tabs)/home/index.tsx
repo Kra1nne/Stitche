@@ -1,7 +1,7 @@
-import ProductCard, { Product } from "@/components/Productcard";
+import ProductCard, { Product } from "@/components/ProductCard";
 import Screen from "@/components/Screen";
 import ScreenHeader from "@/components/ScreenHeader";
-import StatCard, { Stat } from "@/components/Statcard";
+import StatCard, { Stat } from "@/components/StatCard";
 import { icons } from "@/constants/icon";
 import { images } from "@/constants/image";
 import { useThemeColors } from "@/hooks/useThemeColors";

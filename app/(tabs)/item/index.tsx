@@ -1,15 +1,15 @@
-import AddProductModal, { NewProduct } from "@/components/AddProductModal";
-import EmptyState from "@/components/Emptystate";
+import EmptyState from "@/components/EmptyState";
 import FAB from "@/components/FAB";
-import ProductCard, { Product } from "@/components/Productcard";
+import ProductCard, { Product } from "@/components/ProductCard";
+import ProductModal, { ProductFormValues } from "@/components/ProductModal";
 import Screen from "@/components/Screen";
 import ScreenHeader from "@/components/ScreenHeader";
-import SearchBar from "@/components/Searchbar";
+import SearchBar from "@/components/SearchBar";
 import { icons } from "@/constants/icon";
 import { images } from "@/constants/image";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useState } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, Pressable } from "react-native";
 
 const Add = icons.add;
 const Tshirt = icons.tshirt;
@@ -42,6 +42,7 @@ const INITIAL_ITEMS: Product[] = [
 export default function Index() {
   const { iconColor, mutedIconColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [search, setSearch] = useState("");
   const [items, setItems] = useState(INITIAL_ITEMS);
 
@@ -53,17 +54,44 @@ export default function Index() {
     );
   });
 
-  const handleAddProduct = (product: NewProduct) => {
-    setItems((prev) => [
-      ...prev,
-      {
-        id: prev.length ? Math.max(...prev.map((p) => p.id)) + 1 : 1,
-        name: product.name,
-        img: images.tshirt_01, // placeholder until real image upload is wired up
-        price: Number(product.price) || 0,
-        garment: product.garment,
-      },
-    ]);
+  const openAddModal = () => {
+    setEditingProduct(null);
+    setModalVisible(true);
+  };
+
+  const openEditModal = (product: Product) => {
+    setEditingProduct(product);
+    setModalVisible(true);
+  };
+
+  const handleSubmit = (values: ProductFormValues) => {
+    if (editingProduct) {
+      // Edit mode: merge form values back into the existing product
+      setItems((prev) =>
+        prev.map((p) =>
+          p.id === editingProduct.id
+            ? {
+                ...p,
+                name: values.name,
+                garment: values.garment,
+                price: Number(values.price) || 0,
+              }
+            : p,
+        ),
+      );
+    } else {
+      // Add mode: append a new product
+      setItems((prev) => [
+        ...prev,
+        {
+          id: prev.length ? Math.max(...prev.map((p) => p.id)) + 1 : 1,
+          name: values.name,
+          img: images.tshirt_01, // placeholder until real image upload is wired up
+          price: Number(values.price) || 0,
+          garment: values.garment,
+        },
+      ]);
+    }
   };
 
   return (
@@ -89,9 +117,12 @@ export default function Index() {
         contentContainerClassName="pb-24"
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View className="w-[48%] mb-4">
+          <Pressable
+            className="w-[48%] mb-4"
+            onPress={() => openEditModal(item)}
+          >
             <ProductCard product={item} variant="grid" />
-          </View>
+          </Pressable>
         )}
         ListEmptyComponent={
           <EmptyState
@@ -102,14 +133,24 @@ export default function Index() {
         }
       />
 
-      <FAB onPress={() => setModalVisible(true)}>
+      <FAB onPress={openAddModal}>
         <Add width={24} height={24} fill="#fff" />
       </FAB>
 
-      <AddProductModal
+      <ProductModal
         visible={modalVisible}
+        mode={editingProduct ? "edit" : "add"}
+        initialValues={
+          editingProduct
+            ? {
+                name: editingProduct.name,
+                garment: editingProduct.garment ?? "",
+                price: String(editingProduct.price),
+              }
+            : undefined
+        }
         onClose={() => setModalVisible(false)}
-        onSubmit={handleAddProduct}
+        onSubmit={handleSubmit}
       />
     </Screen>
   );
