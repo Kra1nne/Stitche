@@ -14,8 +14,8 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/rm_logo.png",
-        "monochromeImage": "./assets/images/rm_logo.png"
+        "foregroundImage": "./assets/images/loading.png",
+        "monochromeImage": "./assets/images/loading.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
