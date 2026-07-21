@@ -1,5 +1,6 @@
 import { icons } from "@/constants/icon";
 import { useTheme } from "@/context/ThemeContext";
+import { useGarments } from "@/hooks/useGarments";
 import { useEffect, useState } from "react";
 import {
   Keyboard,
@@ -16,20 +17,9 @@ import {
 const Close = icons.close;
 const Camera = icons.camera;
 
-const GARMENTS = [
-  "T-Shirt",
-  "Hoodie",
-  "Polo Shirt",
-  "Shorts",
-  "Jersey",
-  "Jacket",
-];
-const SIZES = ["S", "M", "L", "XL", "XXL", "Customize"];
-
 export type ProductFormValues = {
   name: string;
   garment: string;
-  size: string;
   price: string;
   quantity: number;
 };
@@ -37,7 +27,6 @@ export type ProductFormValues = {
 const EMPTY_VALUES: ProductFormValues = {
   name: "",
   garment: "",
-  size: "",
   price: "",
   quantity: 1,
 };
@@ -57,13 +46,13 @@ export default function ProductModal({
   onClose: () => void;
   onSubmit: (values: ProductFormValues) => void;
 }) {
+  const { garments } = useGarments();
   const { theme } = useTheme();
   const isDarkMode = theme === "dark";
   const iconColor = isDarkMode ? "#f9fafb" : "#1f2937";
 
   const [name, setName] = useState(EMPTY_VALUES.name);
   const [garment, setGarment] = useState<string | null>(null);
-  const [size, setSize] = useState<string | null>(null);
   const [price, setPrice] = useState(EMPTY_VALUES.price);
   const [quantity, setQuantity] = useState(EMPTY_VALUES.quantity);
 
@@ -74,25 +63,21 @@ export default function ProductModal({
     if (mode === "edit" && initialValues) {
       setName(initialValues.name ?? "");
       setGarment(initialValues.garment ?? null);
-      setSize(initialValues.size ?? null);
       setPrice(initialValues.price ?? "");
       setQuantity(initialValues.quantity ?? 1);
     } else {
       setName(EMPTY_VALUES.name);
       setGarment(null);
-      setSize(null);
       setPrice(EMPTY_VALUES.price);
       setQuantity(EMPTY_VALUES.quantity);
     }
   }, [visible, mode, initialValues]);
 
-  const isValid =
-    name.trim().length > 0 && garment && size && price.trim().length > 0;
+  const isValid = name.trim().length > 0 && garment && price.trim().length > 0;
 
   const reset = () => {
     setName(EMPTY_VALUES.name);
     setGarment(null);
-    setSize(null);
     setPrice(EMPTY_VALUES.price);
     setQuantity(EMPTY_VALUES.quantity);
   };
@@ -103,11 +88,10 @@ export default function ProductModal({
   };
 
   const handleSubmit = () => {
-    if (!isValid || !garment || !size) return;
+    if (!isValid || !garment) return;
     onSubmit({
       name: name.trim(),
       garment,
-      size,
       price: price.trim(),
       quantity,
     });
@@ -186,12 +170,13 @@ export default function ProductModal({
                   Garment Type
                 </Text>
                 <View className="flex-row flex-wrap gap-2 mb-5">
-                  {GARMENTS.map((g) => {
-                    const selected = garment === g;
+                  {garments.map((g) => {
+                    const selected = garment === g.name;
+
                     return (
                       <Pressable
-                        key={g}
-                        onPress={() => setGarment(g)}
+                        key={g.id}
+                        onPress={() => setGarment(g.name ?? "")}
                         className={`px-4 py-2 rounded-full border ${
                           selected
                             ? "bg-primary border-primary"
@@ -203,42 +188,12 @@ export default function ProductModal({
                             selected ? "text-white" : "text-foreground"
                           }`}
                         >
-                          {g}
+                          {g.name}
                         </Text>
                       </Pressable>
                     );
                   })}
                 </View>
-
-                {/* Size — re-enabled: isValid depends on it being set */}
-                <Text className="text-xs font-manrope-bold text-gray-400 uppercase mb-2">
-                  Size
-                </Text>
-                <View className="flex-row flex-wrap gap-2 mb-5">
-                  {SIZES.map((s) => {
-                    const selected = size === s;
-                    return (
-                      <Pressable
-                        key={s}
-                        onPress={() => setSize(s)}
-                        className={`px-4 py-2 rounded-full border ${
-                          selected
-                            ? "bg-primary border-primary"
-                            : "bg-foreground/5 border-foreground/5"
-                        }`}
-                      >
-                        <Text
-                          className={`text-xs font-manrope-semibold ${
-                            selected ? "text-white" : "text-foreground"
-                          }`}
-                        >
-                          {s}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
-                </View>
-
                 {/* Price */}
                 <View className="flex-row gap-3 mb-6">
                   <View className="flex-1">

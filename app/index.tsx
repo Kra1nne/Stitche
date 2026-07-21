@@ -6,7 +6,7 @@ import { styled } from "nativewind";
 import { Pressable } from "react-native";
 
 const Screen = styled(Pressable);
-const loadingImage = images.loading;
+const loadingImage = images.Loading;
 export default function App() {
   return (
     <Screen

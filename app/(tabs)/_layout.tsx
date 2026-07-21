@@ -12,6 +12,7 @@ export default function RootLayout() {
   const insets = useSafeAreaInsets();
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === "dark";
+  const bottomInset = Math.max(insets.bottom, tabBar.horizontalInset);
 
   const TabIcon = ({ icon: Icon, focused }: TabIconProps) => {
     return (
@@ -33,12 +34,19 @@ export default function RootLayout() {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
-          bottom: Math.max(insets.bottom, tabBar.horizontalInset),
-          height: tabBar.height,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: tabBar.height + bottomInset,
+          paddingBottom: bottomInset,
+          paddingTop: 0,
+          paddingHorizontal: tabBar.horizontalInset,
           borderRadius: tabBar.radius,
           backgroundColor: isDark ? "#111827" : colors.background,
           borderTopWidth: 0,
+          borderBottomWidth: 0,
           elevation: 0,
+          shadowOpacity: 0,
         },
         tabBarItemStyle: {
           paddingVertical: tabBar.height / 2 - tabBar.iconFrame / 1.6,

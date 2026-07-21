@@ -12,4 +12,8 @@ export interface Item {
   unit_price: number;
 
   remarks?: string;
+
+  url?: string;
+
+  created_at: string;
 }

@@ -17,7 +17,7 @@ export const GARMENT_TABLE = `
 CREATE TABLE IF NOT EXISTS garments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     category TEXT,
 
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
@@ -103,6 +103,10 @@ CREATE TABLE IF NOT EXISTS items (
     unit_price REAL,
 
     remarks TEXT,
+
+    url TEXT,
+
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY(item_id)
         REFERENCES orders(id)

@@ -16,9 +16,19 @@ const Package = icons.packageIcon;
 const ChevronRight = icons.chevronRight;
 
 const PRODUCTS: Product[] = [
-  { id: 1, name: "Blue Plain Tshirt", img: images.tshirt_01, price: 1000 },
-  { id: 2, name: "Purple Plain Tshirt", img: images.tshirt_02, price: 1000 },
-  { id: 3, name: "Black Short", img: images.short_01, price: 1000 },
+  {
+    id: 1,
+    name: "Blue Plain Tshirt",
+    img: images.Black_Basketball_Shorts,
+    price: 1000,
+  },
+  {
+    id: 2,
+    name: "Purple Plain Tshirt",
+    img: images.Black_Padded_Contour_Bra,
+    price: 1000,
+  },
+  { id: 3, name: "Black Short", img: images.Black_Satin_Necktie, price: 1000 },
 ];
 
 export default function Index() {

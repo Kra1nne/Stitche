@@ -19,21 +19,21 @@ const INITIAL_ITEMS: Product[] = [
   {
     id: 1,
     name: "Blue Plain Tshirt",
-    img: images.tshirt_01,
+    img: images.Black_Satin_Necktie,
     price: 1000,
     garment: "T-shirts",
   },
   {
     id: 2,
     name: "Purple Plain Tshirt",
-    img: images.tshirt_02,
+    img: images.Black_Zip_Up_Jacket,
     price: 1000,
     garment: "T-shirts",
   },
   {
     id: 3,
     name: "Black Short",
-    img: images.short_01,
+    img: images.Grey_Button_Front_Waistcoat,
     price: 1000,
     garment: "Shorts",
   },
@@ -80,13 +80,12 @@ export default function Index() {
         ),
       );
     } else {
-      // Add mode: append a new product
       setItems((prev) => [
         ...prev,
         {
           id: prev.length ? Math.max(...prev.map((p) => p.id)) + 1 : 1,
           name: values.name,
-          img: images.tshirt_01, // placeholder until real image upload is wired up
+          img: images.Grey_Button_Front_Waistcoat,
           price: Number(values.price) || 0,
           garment: values.garment,
         },
