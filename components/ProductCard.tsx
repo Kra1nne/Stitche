@@ -32,21 +32,25 @@ export default function ProductCard({
             : { width: "100%", aspectRatio: 1, borderRadius: 16 }
         }
       />
-      <Text
-        numberOfLines={2}
-        className="mt-2.5 text-xs font-manrope-bold text-foreground"
-      >
-        {product.name}
-      </Text>
-      {product.garment ? (
-        <Text className="mt-0.5 text-[11px] font-manrope-medium text-gray-400">
-          {product.garment}
+      <View className="flex-1 justify-between">
+        <Text
+          numberOfLines={2}
+          className="mt-2.5 text-xs font-manrope-bold text-foreground"
+        >
+          {product.name}
         </Text>
-      ) : null}
-      <View className="mt-2 self-start bg-primary/10 px-2.5 py-1 rounded-full">
-        <Text className="text-xs font-manrope-extrabold text-primary">
-          ₱{product.price.toLocaleString()}
-        </Text>
+        <View className="mt-2 self-start bg-primary/10 px-2.5 py-1 rounded-full">
+          <Text className="text-xs font-manrope-extrabold text-primary">
+            ₱{product.price.toLocaleString()}
+          </Text>
+        </View>
+      </View>
+      <View className="hidden">
+        {product.garment ? (
+          <Text className="mt-0.5 text-[11px] font-manrope-medium text-gray-400">
+            {product.garment}
+          </Text>
+        ) : null}
       </View>
     </View>
   );

@@ -4,8 +4,12 @@ import ScreenHeader from "@/components/ScreenHeader";
 import StatCard, { Stat } from "@/components/StatCard";
 import { icons } from "@/constants/icon";
 import { images } from "@/constants/image";
+import { useGarments } from "@/hooks/useGarments";
+import { useItems } from "@/hooks/useItem";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { Link } from "expo-router";
+import { Item } from "@/models";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useMemo } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 const BellIcon = icons.bell;
@@ -15,24 +19,44 @@ const Clock = icons.clock;
 const Package = icons.packageIcon;
 const ChevronRight = icons.chevronRight;
 
-const PRODUCTS: Product[] = [
-  {
-    id: 1,
-    name: "Blue Plain Tshirt",
-    img: images.Black_Basketball_Shorts,
-    price: 1000,
-  },
-  {
-    id: 2,
-    name: "Purple Plain Tshirt",
-    img: images.Black_Padded_Contour_Bra,
-    price: 1000,
-  },
-  { id: 3, name: "Black Short", img: images.Black_Satin_Necktie, price: 1000 },
-];
+const getProductImage = (imageKey?: string) => {
+  if (!imageKey) {
+    return images.White_Crew_Neck_T_Shirt;
+  }
+
+  return images[imageKey as keyof typeof images];
+};
+
+const mapItemToProduct = (
+  item: Item,
+  garments: Array<{ id?: number; name?: string }>,
+): Product => {
+  const garmentName =
+    garments.find((garment) => garment.id === item.garment_id)?.name ??
+    "Unknown";
+
+  return {
+    id: item.id ?? 0,
+    name: item.remarks?.trim() || "Untitled Product",
+    img: getProductImage(item.url ?? undefined),
+    price: Number(item.unit_price) || 0,
+  };
+};
 
 export default function Index() {
+  const { loadItems, Items } = useItems();
+  const { garments } = useGarments();
   const { iconColor } = useThemeColors();
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadItems();
+    }, [loadItems]),
+  );
+
+  const previewProducts = useMemo(() => {
+    return Items.slice(0, 5).map((item) => mapItemToProduct(item, garments));
+  }, [Items, garments]);
 
   const stats: Stat[] = [
     {
@@ -126,28 +150,37 @@ export default function Index() {
             <Text className="font-manrope-bold text-xl text-foreground">
               Products
             </Text>
-            <Link href="../item/" asChild>
-              <Pressable className="flex-row items-center gap-1 py-1">
-                <Text className="font-manrope-semibold text-sm text-primary">
-                  View all
-                </Text>
-                <ChevronRight width={14} height={14} fill="#2563EB" />
-              </Pressable>
-            </Link>
+            <Pressable
+              onPress={() => router.push("/(tabs)/item")}
+              className="flex-row items-center gap-1 py-1"
+            >
+              <Text className="font-manrope-semibold text-sm text-primary">
+                View all
+              </Text>
+              <ChevronRight width={14} height={14} fill="#2563EB" />
+            </Pressable>
           </View>
 
-          <View className="mb-16">
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingVertical: 12 }}
-            >
-              {PRODUCTS.map((product, idx) => (
-                <View key={product.id} className={idx > 0 ? "ml-3" : ""}>
-                  <ProductCard product={product} variant="carousel" />
-                </View>
-              ))}
-            </ScrollView>
+          <View className="mb-20">
+            {previewProducts.length > 0 && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingVertical: 12 }}
+              >
+                {previewProducts.map((product, idx) => (
+                  <View key={product.id} className={idx > 0 ? "ml-3" : ""}>
+                    <ProductCard product={product} variant="carousel" />
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+
+            {previewProducts.length === 0 && (
+              <View className="h-40 items-center justify-center">
+                <Text className="text-gray-500">No products found.</Text>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>

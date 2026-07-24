@@ -7,46 +7,59 @@ import ScreenHeader from "@/components/ScreenHeader";
 import SearchBar from "@/components/SearchBar";
 import { icons } from "@/constants/icon";
 import { images } from "@/constants/image";
+import { useGarments } from "@/hooks/useGarments";
+import { useItems } from "@/hooks/useItem";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useState } from "react";
+import { Item } from "@/models";
+import { useMemo, useState } from "react";
 import { FlatList, Pressable } from "react-native";
 
 const Add = icons.add;
 const Tshirt = icons.tshirt;
 const Filter = icons.filter;
 
-const INITIAL_ITEMS: Product[] = [
-  {
-    id: 1,
-    name: "Blue Plain Tshirt",
-    img: images.Black_Satin_Necktie,
-    price: 1000,
-    garment: "T-shirts",
-  },
-  {
-    id: 2,
-    name: "Purple Plain Tshirt",
-    img: images.Black_Zip_Up_Jacket,
-    price: 1000,
-    garment: "T-shirts",
-  },
-  {
-    id: 3,
-    name: "Black Short",
-    img: images.Grey_Button_Front_Waistcoat,
-    price: 1000,
-    garment: "Shorts",
-  },
-];
+const getProductImage = (imageKey?: string) => {
+  if (!imageKey) {
+    return images.White_Crew_Neck_T_Shirt;
+  }
+
+  return images[imageKey as keyof typeof images];
+};
+
+const getImageKey = (image: any) => {
+  return Object.entries(images).find(([, value]) => value === image)?.[0];
+};
+
+const mapItemToProduct = (
+  item: Item,
+  garments: Array<{ id?: number; name?: string }>,
+): Product => {
+  const garmentName =
+    garments.find((garment) => garment.id === item.garment_id)?.name ??
+    "Unknown";
+
+  return {
+    id: item.id ?? 0,
+    name: item.remarks?.trim() || "Untitled Product",
+    img: getProductImage(item.url ?? undefined),
+    price: Number(item.unit_price) || 0,
+    garment: garmentName,
+  };
+};
 
 export default function Index() {
   const { iconColor, mutedIconColor } = useThemeColors();
+  const { Items: dbItems, addItem, updateItem, deleteItem } = useItems();
+  const { garments } = useGarments();
   const [modalVisible, setModalVisible] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [search, setSearch] = useState("");
-  const [items, setItems] = useState(INITIAL_ITEMS);
 
-  const filteredItems = items.filter((item) => {
+  const products = useMemo(() => {
+    return dbItems.map((item) => mapItemToProduct(item, garments));
+  }, [dbItems, garments]);
+
+  const filteredItems = products.filter((item) => {
     const query = search.toLowerCase();
     return (
       item.name.toLowerCase().includes(query) ||
@@ -64,33 +77,42 @@ export default function Index() {
     setModalVisible(true);
   };
 
-  const handleSubmit = (values: ProductFormValues) => {
+  const handleDelete = async (product: Product) => {
+    if (!product.id) return;
+    await deleteItem(product.id);
+    setModalVisible(false);
+    setEditingProduct(null);
+  };
+
+  const handleSubmit = async (values: ProductFormValues) => {
+    const garmentMatch = garments.find(
+      (garment) =>
+        garment.name?.trim().toLowerCase() ===
+        values.garment.trim().toLowerCase(),
+    );
+
     if (editingProduct) {
-      // Edit mode: merge form values back into the existing product
-      setItems((prev) =>
-        prev.map((p) =>
-          p.id === editingProduct.id
-            ? {
-                ...p,
-                name: values.name,
-                garment: values.garment,
-                price: Number(values.price) || 0,
-              }
-            : p,
-        ),
-      );
+      if (editingProduct.id) {
+        await updateItem(editingProduct.id, {
+          garment_id: garmentMatch?.id ?? undefined,
+          unit_price: Number(values.price) || 0,
+          remarks: values.name.trim(),
+          url: values.imageKey ?? undefined,
+        });
+      }
     } else {
-      setItems((prev) => [
-        ...prev,
-        {
-          id: prev.length ? Math.max(...prev.map((p) => p.id)) + 1 : 1,
-          name: values.name,
-          img: images.Grey_Button_Front_Waistcoat,
-          price: Number(values.price) || 0,
-          garment: values.garment,
-        },
-      ]);
+      await addItem({
+        item_id: 0,
+        garment_id: garmentMatch?.id ?? 1,
+        unit_price: Number(values.price) || 0,
+        remarks: values.name.trim(),
+        url: values.imageKey ?? undefined,
+        created_at: new Date().toISOString(),
+      });
     }
+
+    setModalVisible(false);
+    setEditingProduct(null);
   };
 
   return (
@@ -145,11 +167,15 @@ export default function Index() {
                 name: editingProduct.name,
                 garment: editingProduct.garment ?? "",
                 price: String(editingProduct.price),
+                imageKey: getImageKey(editingProduct.img),
               }
             : undefined
         }
         onClose={() => setModalVisible(false)}
         onSubmit={handleSubmit}
+        onDelete={
+          editingProduct ? () => handleDelete(editingProduct) : undefined
+        }
       />
     </Screen>
   );
