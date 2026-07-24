@@ -16,35 +16,10 @@ export class ItemRepository {
   }
 
   async addData(item: Item) {
-    const existingCustomer = await this.db.getFirstAsync<{ id: number }>(
-      "SELECT id FROM customers WHERE full_name = ? LIMIT 1",
-      ["Guest"],
-    );
-
-    const customerId =
-      existingCustomer?.id ??
-      Number(
-        (
-          await this.db.runAsync(
-            "INSERT INTO customers (full_name) VALUES (?)",
-            ["Guest"],
-          )
-        ).lastInsertRowId,
-      );
-
-    const orderResult = await this.db.runAsync(
-      `INSERT INTO orders (customer_id, quantity, total, status)
-       VALUES (?, ?, ?, ?)`,
-      [customerId, 1, 0, "Pending"],
-    );
-
-    const orderId = Number(orderResult.lastInsertRowId);
-
     return await this.db.runAsync(
-      `INSERT INTO items (item_id, garment_id, size_id, material, unit_price, remarks, url)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO items (garment_id, size_id, material, unit_price, remarks, url)
+       VALUES (?, ?, ?, ?, ?, ?)`,
       [
-        orderId,
         item.garment_id ?? null,
         item.size_id ?? null,
         item.material ?? null,

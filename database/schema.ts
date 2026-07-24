@@ -92,8 +92,6 @@ export const ITEM_TABLE = `
 CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-    item_id INTEGER NOT NULL,
-
     garment_id INTEGER NOT NULL,
 
     size_id INTEGER,

@@ -1,8 +1,6 @@
 export interface Item {
   id?: number;
 
-  item_id: number;
-
   garment_id: number;
 
   size_id?: number;
