@@ -106,10 +106,6 @@ CREATE TABLE IF NOT EXISTS items (
 
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY(item_id)
-        REFERENCES orders(id)
-        ON DELETE CASCADE,
-
     FOREIGN KEY(garment_id)
         REFERENCES garments(id),
 

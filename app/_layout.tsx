@@ -33,6 +33,14 @@ export default function RootLayout() {
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="pages/addOrder"
+              options={{
+                title: "New Order",
+                headerShown: false,
+                headerBackTitle: "Back",
+              }}
+            />
           </Stack>
         </SQLiteProvider>
       </ThemeProvider>

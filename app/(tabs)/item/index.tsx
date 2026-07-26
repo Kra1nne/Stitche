@@ -102,7 +102,6 @@ export default function Index() {
       }
     } else {
       await addItem({
-        item_id: 0,
         garment_id: garmentMatch?.id ?? 1,
         unit_price: Number(values.price) || 0,
         remarks: values.name.trim(),

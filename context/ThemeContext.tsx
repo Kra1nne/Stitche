@@ -1,13 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
+import { styled } from "nativewind";
 import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useState,
 } from "react";
-import { Appearance, useColorScheme, View } from "react-native";
+import { useColorScheme, View } from "react-native";
 
 type Theme = "light" | "dark";
 
@@ -22,6 +23,7 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 const STORAGE_KEY = "theme";
+const RootView = styled(View);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const systemTheme = useColorScheme();
@@ -38,7 +40,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
         if (saved === "light" || saved === "dark") {
           setTheme(saved);
-          Appearance.setColorScheme(saved);
         }
       } catch (e) {
         console.warn(e);
@@ -54,7 +55,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const next: Theme = theme === "dark" ? "light" : "dark";
 
     setTheme(next);
-    Appearance.setColorScheme(next);
 
     try {
       await AsyncStorage.setItem(STORAGE_KEY, next);
@@ -67,10 +67,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <View className={theme === "dark" ? "dark flex-1" : "flex-1"}>
+      <RootView
+        className={`${theme === "dark" ? "dark " : ""}flex-1 bg-background`}
+      >
         <StatusBar style={theme === "dark" ? "light" : "dark"} />
         {children}
-      </View>
+      </RootView>
     </ThemeContext.Provider>
   );
 }

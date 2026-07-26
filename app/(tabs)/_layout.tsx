@@ -1,8 +1,8 @@
 import { tabs } from "@/constants/data";
 import { colors, components } from "@/constants/themes";
+import { useTheme } from "@/context/ThemeContext";
 import clsx from "clsx";
 import { Tabs } from "expo-router";
-import { useColorScheme } from "nativewind";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -10,8 +10,8 @@ const tabBar = components.tabBar;
 
 export default function RootLayout() {
   const insets = useSafeAreaInsets();
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const bottomInset = Math.max(insets.bottom, tabBar.horizontalInset);
 
   const TabIcon = ({ icon: Icon, focused }: TabIconProps) => {

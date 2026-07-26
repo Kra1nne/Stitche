@@ -10,6 +10,15 @@ import {
 } from "./schema";
 
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
+  // await db.execAsync(`
+  //   DROP TABLE IF EXISTS items;
+  //   DROP TABLE IF EXISTS orders;
+  //   DROP TABLE IF EXISTS size_measurements;
+  //   DROP TABLE IF EXISTS customers;
+  //   DROP TABLE IF EXISTS garments;
+  //   DROP TABLE IF EXISTS sizes;
+  // `);
+
   await db.execAsync("PRAGMA journal_mode = WAL;");
 
   await db.execAsync(CUSTOMER_TABLE);

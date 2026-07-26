@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "stitche",
-    "slug": "stitche",
+    "name": "Stitche",
+    "slug": "Stitche",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
-    "scheme": "stitche",
+    "scheme": "Stitche",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

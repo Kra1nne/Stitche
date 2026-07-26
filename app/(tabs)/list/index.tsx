@@ -6,6 +6,7 @@ import SearchBar from "@/components/SearchBar";
 import StatusBadge from "@/components/StatusBadge";
 import { icons } from "@/constants/icon";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { router } from "expo-router";
 import { useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
 
@@ -271,7 +272,7 @@ export default function Index() {
         }
       />
 
-      <FAB onPress={() => setModalVisible(true)}>
+      <FAB onPress={() => router.push("/pages/addOrder")}>
         <Add width={24} height={24} fill="#fff" />
       </FAB>
     </Screen>

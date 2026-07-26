@@ -9,27 +9,4 @@ export class GarmentRepository {
       "SELECT * FROM garments ORDER BY id DESC",
     );
   }
-  // async addData(garment: Garment) {
-  //   const result = await this.db.runAsync(
-  //     `INSERT INTO garments (name, category)
-  //      VALUES (?, ?)`,
-  //     [garment.name ?? null, garment.category ?? null],
-  //   );
-
-  //   return result.lastInsertRowId;
-  // }
-
-  // async updateData(garment: Garment) {
-  //   if (!garment.id) {
-  //     throw new Error("Garment ID is required for update.");
-  //   }
-  //   return await this.db.runAsync(
-  //     `UPDATE garments
-  //      SET
-  //         name = ?,
-  //         category,
-  //         `
-  //   )
-
-  // }
 }
