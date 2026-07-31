@@ -40,7 +40,7 @@ const mapItemToProduct = (
 
   return {
     id: item.id ?? 0,
-    name: item.remarks?.trim() || "Untitled Product",
+    name: item.name?.trim() || "Untitled Product",
     img: getProductImage(item.url ?? undefined),
     price: Number(item.unit_price) || 0,
     garment: garmentName,
@@ -96,7 +96,7 @@ export default function Index() {
         await updateItem(editingProduct.id, {
           garment_id: garmentMatch?.id ?? undefined,
           unit_price: Number(values.price) || 0,
-          remarks: values.name.trim(),
+          name: values.name.trim(),
           url: values.imageKey ?? undefined,
         });
       }
@@ -104,7 +104,7 @@ export default function Index() {
       await addItem({
         garment_id: garmentMatch?.id ?? 1,
         unit_price: Number(values.price) || 0,
-        remarks: values.name.trim(),
+        name: values.name.trim(),
         url: values.imageKey ?? undefined,
         created_at: new Date().toISOString(),
       });
@@ -148,7 +148,6 @@ export default function Index() {
           <EmptyState
             icon={<Tshirt width={28} height={28} fill={iconColor} />}
             title="No products found"
-            subtitle="Try a different search term"
           />
         }
       />

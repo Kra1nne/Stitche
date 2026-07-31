@@ -37,7 +37,7 @@ const mapItemToProduct = (
 
   return {
     id: item.id ?? 0,
-    name: item.remarks?.trim() || "Untitled Product",
+    name: item.name?.trim() || "Untitled Product",
     img: getProductImage(item.url ?? undefined),
     price: Number(item.unit_price) || 0,
   };

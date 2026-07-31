@@ -1,4 +1,5 @@
 import clock from "../assets/icons/alarm-clock.svg";
+import back from "../assets/icons/angle-left.svg";
 import chevronRight from "../assets/icons/angle-small-right.svg";
 import app from "../assets/icons/apps.svg";
 import trend from "../assets/icons/arrow-trend-up.svg";
@@ -30,6 +31,7 @@ import logout from "../assets/icons/user-logout.svg";
 import user from "../assets/icons/user.svg";
 
 export const icons = {
+  back,
   camera,
   close,
   minus,

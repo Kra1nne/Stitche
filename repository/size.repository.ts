@@ -6,7 +6,7 @@ export class SizeRepository {
 
   async getAll() {
     return await this.db.getAllAsync<Size>(
-      "SELECT * FROM sizes ORDER BY id DESC",
+      "SELECT * FROM sizes ORDER BY id Asc",
     );
   }
 }

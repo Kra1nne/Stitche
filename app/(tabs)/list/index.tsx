@@ -272,7 +272,7 @@ export default function Index() {
         }
       />
 
-      <FAB onPress={() => router.push("/pages/addOrder")}>
+      <FAB onPress={() => router.push("/pages/order")}>
         <Add width={24} height={24} fill="#fff" />
       </FAB>
     </Screen>

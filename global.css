@@ -17,7 +17,7 @@
   --color-muted-foreground: #6b7280; /* Soft gray */
 
   /* Brand */
-  --color-primary: #1e3a5f; /* Deep navy */
+  --color-primary: #8bb8ff;
   --color-primary-foreground: #ffffff;
 
   --color-accent: #a97142; /* Leather brown */
@@ -78,7 +78,7 @@
   --color-card: #1f2937;
   --color-muted: #374151;
   --color-muted-foreground: #d1d5db;
-  --color-primary: #8bb8ff;
+  --color-primary: #1e3a5f;
   --color-primary-foreground: #111827;
   --color-accent: #fbbf24;
   --color-border: #4b5563;

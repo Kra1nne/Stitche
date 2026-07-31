@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS items (
 
     unit_price REAL,
 
-    remarks TEXT,
+    name TEXT,
 
     url TEXT,
 

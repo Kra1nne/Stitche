@@ -22,7 +22,6 @@ export type ProductFormValues = {
   name: string;
   garment: string;
   price: string;
-  quantity: number;
   imageKey?: string;
 };
 
@@ -30,7 +29,6 @@ const EMPTY_VALUES: ProductFormValues = {
   name: "",
   garment: "",
   price: "",
-  quantity: 1,
   imageKey: undefined,
 };
 
@@ -63,7 +61,7 @@ export default function ProductModal({
   const [name, setName] = useState(EMPTY_VALUES.name);
   const [garment, setGarment] = useState<string>("");
   const [price, setPrice] = useState(EMPTY_VALUES.price);
-  const [quantity, setQuantity] = useState(EMPTY_VALUES.quantity);
+
   const [selectedImageKey, setSelectedImageKey] = useState<string | null>(null);
 
   // Populate the form whenever the modal opens, using initialValues in edit mode
@@ -74,13 +72,12 @@ export default function ProductModal({
       setName(initialValues.name ?? "");
       setGarment(initialValues.garment ?? "");
       setPrice(initialValues.price ?? "");
-      setQuantity(initialValues.quantity ?? 1);
+
       setSelectedImageKey(initialValues.imageKey ?? null);
     } else {
       setName(EMPTY_VALUES.name);
       setGarment("");
       setPrice(EMPTY_VALUES.price);
-      setQuantity(EMPTY_VALUES.quantity);
       setSelectedImageKey(null);
     }
   }, [visible, mode, initialValues]);
@@ -95,7 +92,7 @@ export default function ProductModal({
     setName(EMPTY_VALUES.name);
     setGarment("");
     setPrice(EMPTY_VALUES.price);
-    setQuantity(EMPTY_VALUES.quantity);
+
     setSelectedImageKey(null);
   };
 
@@ -110,7 +107,6 @@ export default function ProductModal({
       name: name.trim(),
       garment,
       price: price.trim(),
-      quantity,
       imageKey: selectedImageKey ?? undefined,
     });
     if (mode === "add") reset();

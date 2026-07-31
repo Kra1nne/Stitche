@@ -17,14 +17,14 @@ export class ItemRepository {
 
   async addData(item: Item) {
     return await this.db.runAsync(
-      `INSERT INTO items (garment_id, size_id, material, unit_price, remarks, url)
+      `INSERT INTO items (garment_id, size_id, material, unit_price, name, url)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
         item.garment_id ?? null,
         item.size_id ?? null,
         item.material ?? null,
         item.unit_price ?? 0,
-        item.remarks ?? null,
+        item.name ?? null,
         item.url ?? null,
       ],
     );
@@ -58,9 +58,9 @@ export class ItemRepository {
       values.push(item.unit_price);
     }
 
-    if (item.remarks !== undefined) {
-      updates.push("remarks = ?");
-      values.push(item.remarks);
+    if (item.name !== undefined) {
+      updates.push("name = ?");
+      values.push(item.name);
     }
 
     if (item.url !== undefined) {

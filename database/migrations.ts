@@ -38,6 +38,7 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
       ('L'),
       ('XL'),
       ('XXL'),
+      ('XXXL'),
       ('Custom');
   `);
 

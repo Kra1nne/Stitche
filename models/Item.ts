@@ -9,7 +9,7 @@ export interface Item {
 
   unit_price: number;
 
-  remarks?: string;
+  name?: string;
 
   url?: string;
 

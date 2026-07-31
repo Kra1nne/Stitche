@@ -1,5 +1,4 @@
 export * from "./Customer";
-export * from "./CustomerMeasurement";
 export * from "./Garment";
 export * from "./Item";
 export * from "./Order";
